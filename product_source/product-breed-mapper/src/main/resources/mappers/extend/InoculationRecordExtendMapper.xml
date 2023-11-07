@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.InoculationRecordExtendMapper">
+
+    <!-- 定义resultMap: 基本信息 + 疫苗信息 + 员工信息 -->
+    <resultMap id="InoculationRecordWithVaccinesAndUAccountResultMap"
+               type="com.briup.framework.bean.extend.InoculationRecordExtend"
+               extends="com.briup.framework.mapper.InoculationRecordMapper.BaseResultMap">
+        <association property="vaccines" resultMap="com.briup.framework.mapper.ManagerVaccinesMapper.BaseResultMap"></association>
+        <association property="inoculationAccount" resultMap="com.briup.framework.mapper.extend.ManagerFreezerExtendMapper.UserExtendMap1"></association>
+    </resultMap>
+
+    <sql id="whereByIrIdsSql">
+        where ir_id in
+        <foreach collection="irIds" open="("  separator="," close=")" item="irId">
+            #{irId}
+        </foreach>
+    </sql>
+
+    <!-- 获取所有相关动物id，根据irIds -->
+    <select id="getAllAnimalIdByIrIds" resultType="string">
+        select ir_animal_id
+        from inoculation_record
+        where ir_id in
+        <foreach collection="irIds" open="("  separator="," close=")" item="irId">
+            #{irId}
+        </foreach>
+        <!-- <include refid="whereByIrIdsSql"></include>也可以 -->
+    </select>
+
+    <delete id="deleteAllByIds">
+        delete from inoculation_record
+        <include refid="whereByIrIdsSql"></include>
+    </delete>
+
+    <select id="selectAllWithVaccinesAndUAccount" resultMap="InoculationRecordWithVaccinesAndUAccountResultMap">
+        select ir.*, mv.*, ba.*, br.*
+        from inoculation_record ir,manager_vaccines mv,base_account ba,base_role br,base_account_role_r bar
+        where ir.ir_vaccines_id = mv.v_vaccines_id
+          and ir.ir_uinoculation_id = ba.account_id
+          and ba.account_id = bar.account_id
+          and bar.role_id = br.role_id
+        order by STR_TO_DATE(ir.ir_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+
+    <!-- 查询 记录表中 所有已参与接种的人员 -->
+    <select id="selectAllUAccounts" resultMap="com.briup.framework.base.mapper.basic.BaseAccountMapper.BaseResultMap">
+        select *
+        from base_account
+        where account_id in (
+            select DISTINCT ir_uinoculation_id
+            from inoculation_record
+        )
+    </select>
+
+    <!-- selectWithExtend(irId,irAnimalId,irVaccinesId,irUinoculationId,itTime) -->
+    <select id="selectWithExtend" resultMap="InoculationRecordWithVaccinesAndUAccountResultMap">
+        select ir.*, mv.*, ba.*, br.*
+        from inoculation_record ir,manager_vaccines mv,base_account ba,base_role br,base_account_role_r bar,manager_animal ma
+        where ir.ir_vaccines_id = mv.v_vaccines_id
+            and ir.ir_uinoculation_id = ba.account_id
+            and ir.ir_animal_id = ma.a_animal_id
+            and ba.account_id = bar.account_id
+            and bar.role_id = br.role_id
+            and ma.a_backup2='0'
+            <if test="irAnimalId != null">
+                and ir.ir_animal_id like concat('%',#{irAnimalId},'%')
+            </if>
+            <if test="irVaccinesId != null">
+                and ir.ir_vaccines_id = #{irVaccinesId}
+            </if>
+            <if test="irUinoculationId != null">
+                and ir.ir_uinoculation_id = #{irUinoculationId}
+            </if>
+            <if test="startTime != null">
+                and STR_TO_DATE(ir.ir_time,'%Y-%m-%d %H:%i:%s') >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and STR_TO_DATE(ir.ir_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endTime}
+            </if>
+        order by STR_TO_DATE(ir.ir_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.BatchAnimalMapper">
+    <resultMap id="BatchAnimalMap" type="com.briup.framework.bean.extend.ManagerBatchAnimalExtend" extends="com.briup.framework.mapper.ManagerBatchMapper.BaseResultMap">
+        <collection property="managerAnimals" resultMap="com.briup.framework.mapper.ManagerAnimalMapper.BaseResultMap"/>
+    </resultMap>
+    <select id="query" parameterType="String" resultMap="BatchAnimalMap">
+        select
+            b.b_serial_id, b.b_desc, b.b_quarantine,
+               b.b_qualified, b.b_quarantine_img, b.b_time, b.b_delete,
+            a.a_animal_id, a.a_weight, a.a_gender, a.a_healthy, a.a_status, a.a_inoculate,
+               a.a_time, a.a_backup1, a.a_backup2, a.a_backup3, a.a_batch_id, a.a_hurdles_id
+       from manager_batch b,manager_animal a
+         where a.a_batch_id=b.b_serial_id and a.a_status=#{aStatus}
+         order by b.b_serial_id desc,a.a_animal_id desc
+    </select>
+    <insert id="insertOutCircle">
+        insert into out_circle(oc_time,oc_batch_id,oc_ubreed_id)
+          values(#{ocTime},#{ocBatchId},#{ocUbreedId})
+    </insert>
+    <insert id="insertSlaughterRegistration">
+        insert into slaughter_registration(srn_time,srn_batch_id,srn_group_id)
+        values(#{srnTime},#{srnBatchId},#{srnGroupId})
+    </insert>
+    <insert id="insertColdStorageRecord">
+        insert into cold_storage_record(csr_into_time,csr_animal_id,csr_cold_id,csr_ucold_id)
+         values(#{csrIntoTime},#{csrAnimalId},#{csrColdId},#{csrUcoldId})
+    </insert>
+    <update id="updateColdStorageRecord">
+        update cold_storage_record set csr_out_time=#{csrOutTime}
+        where csr_animal_id in
+        <foreach collection="animalIds" item="animalId"
+                 separator="," open="(" close=")">
+            #{animalId}
+        </foreach>
+    </update>
+    <update id="updateAnimalStatus">
+        update manager_animal set a_status=#{status},a_backup1=#{isrId}
+         where a_animal_id in
+        <foreach collection="animalIds" item="animalId"
+                 separator="," open="(" close=")">
+            #{animalId}
+        </foreach>
+    </update>
+    <update id="updateAnimalInoculate">
+        update manager_animal set a_inoculate=#{aInoculate}
+        where a_animal_id in
+        <foreach collection="animalIds" item="animalId"
+                 separator="," open="(" close=")">
+            #{animalId}
+        </foreach>
+    </update>
+    <update id="updateAnimalHealthy">
+        update manager_animal set a_healthy=#{aHealthy}
+        where a_animal_id=#{animalId}
+    </update>
+    <update id="updateAnimalImg">
+        update manager_animal set a_backup3=#{aBackup3}
+        where a_animal_id=#{animalId}
+    </update>
+    <update id="updateAnimaWeight">
+        update manager_animal set a_weight=#{aWeight}
+        where a_animal_id=#{animalId}
+    </update>
+    <select id="selectByAId" parameterType="String" resultType="int">
+        select csr_cold_id from cold_storage_record where csr_animal_id=#{aId}
+    </select>
+</mapper>

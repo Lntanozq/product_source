@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ManagerFenceHouseExtendMapper">
+  <resultMap id="ManagerFenceHouseExtendMap" type="com.briup.framework.bean.extend.ManagerFenceHouseExtend" extends="com.briup.framework.mapper.ManagerFenceHouseMapper.BaseResultMap">
+    <association property="count" column="fh_id" select="count"/>
+  </resultMap>
+  <resultMap id="ManagerFenceHouseExtendMap1" type="com.briup.framework.bean.extend.ManagerFenceHouseExtend" extends="com.briup.framework.mapper.ManagerFenceHouseMapper.BaseResultMap">
+    <collection property="mhs" resultMap="com.briup.framework.mapper.ManagerHurdlesMapper.BaseResultMap"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    fh_id, fh_name, fh_desc, fh_time, fh_delete
+  </sql>
+  <select id="query"  resultMap="ManagerFenceHouseExtendMap">
+    select
+    fh_id, fh_name, fh_desc, fh_time, fh_delete
+    from manager_fence_house
+    <where>
+      <if test="fhName != null">
+        AND fh_name like concat('%',#{fhName},'%')
+      </if>
+    </where>
+    order by STR_TO_DATE(fh_time,'%Y-%m-%d %H:%i:%s') desc
+  </select>
+  <select id="count" parameterType="String" resultType="int">
+    select
+      count(*)
+    from manager_hurdles where h_delete=0 and h_fence_id=#{fhId};
+  </select>
+  <select id="selectById" parameterType="String" resultMap="ManagerFenceHouseExtendMap1">
+    select fh.fh_id, fh.fh_name, fh.fh_desc, fh.fh_time, fh.fh_delete,
+           h.h_id, h.h_name, h.h_desc, h.h_max, h.h_saved, h.h_time,
+           h.h_enable, h.h_full, h.h_backup1, h.h_backup2,
+           h.h_backup3, h.h_delete, h.h_fence_id
+    from manager_fence_house fh LEFT JOIN (select * from manager_hurdles where h_delete=0) h on  h.h_fence_id=fh.fh_Id
+    where
+          fh_delete=0 and
+      fh.fh_Id=#{fhId}
+  </select>
+  <select id="queryAll" resultMap="com.briup.framework.mapper.ManagerFenceHouseMapper.BaseResultMap">
+     select * from manager_fence_house where fh_delete=0
+  </select>
+  <update id="updateById" parameterType="String">
+    update manager_fence_house set  fh_delete=1 where fh_id=#{fhId}
+  </update>
+</mapper>

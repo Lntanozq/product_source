@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.SituationReportingMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.SituationReporting">
+    <id column="sr_id" jdbcType="INTEGER" property="srId" />
+    <result column="sr_animal_id" jdbcType="VARCHAR" property="srAnimalId" />
+    <result column="sr_desc" jdbcType="VARCHAR" property="srDesc" />
+    <result column="sr_ubreed_id" jdbcType="VARCHAR" property="srUbreedId" />
+    <result column="sr_time" jdbcType="VARCHAR" property="srTime" />
+    <result column="sr_status" jdbcType="VARCHAR" property="srStatus" />
+    <result column="sr_udocker_id" jdbcType="VARCHAR" property="srUdockerId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sr_id, sr_animal_id, sr_desc, sr_ubreed_id, sr_time, sr_status, sr_udocker_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from situation_reporting
+    where sr_id = #{srId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from situation_reporting
+    where sr_id = #{srId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.SituationReporting">
+    insert into situation_reporting (sr_id, sr_animal_id, sr_desc, 
+      sr_ubreed_id, sr_time, sr_status, 
+      sr_udocker_id)
+    values (#{srId,jdbcType=INTEGER}, #{srAnimalId,jdbcType=VARCHAR}, #{srDesc,jdbcType=VARCHAR}, 
+      #{srUbreedId,jdbcType=VARCHAR}, #{srTime,jdbcType=VARCHAR}, #{srStatus,jdbcType=VARCHAR}, 
+      #{srUdockerId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.SituationReporting">
+    insert into situation_reporting
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="srId != null">
+        sr_id,
+      </if>
+      <if test="srAnimalId != null">
+        sr_animal_id,
+      </if>
+      <if test="srDesc != null">
+        sr_desc,
+      </if>
+      <if test="srUbreedId != null">
+        sr_ubreed_id,
+      </if>
+      <if test="srTime != null">
+        sr_time,
+      </if>
+      <if test="srStatus != null">
+        sr_status,
+      </if>
+      <if test="srUdockerId != null">
+        sr_udocker_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="srId != null">
+        #{srId,jdbcType=INTEGER},
+      </if>
+      <if test="srAnimalId != null">
+        #{srAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="srDesc != null">
+        #{srDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="srUbreedId != null">
+        #{srUbreedId,jdbcType=VARCHAR},
+      </if>
+      <if test="srTime != null">
+        #{srTime,jdbcType=VARCHAR},
+      </if>
+      <if test="srStatus != null">
+        #{srStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="srUdockerId != null">
+        #{srUdockerId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.SituationReporting">
+    update situation_reporting
+    <set>
+      <if test="srAnimalId != null">
+        sr_animal_id = #{srAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="srDesc != null">
+        sr_desc = #{srDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="srUbreedId != null">
+        sr_ubreed_id = #{srUbreedId,jdbcType=VARCHAR},
+      </if>
+      <if test="srTime != null">
+        sr_time = #{srTime,jdbcType=VARCHAR},
+      </if>
+      <if test="srStatus != null">
+        sr_status = #{srStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="srUdockerId != null">
+        sr_udocker_id = #{srUdockerId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sr_id = #{srId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.SituationReporting">
+    update situation_reporting
+    set sr_animal_id = #{srAnimalId,jdbcType=VARCHAR},
+      sr_desc = #{srDesc,jdbcType=VARCHAR},
+      sr_ubreed_id = #{srUbreedId,jdbcType=VARCHAR},
+      sr_time = #{srTime,jdbcType=VARCHAR},
+      sr_status = #{srStatus,jdbcType=VARCHAR},
+      sr_udocker_id = #{srUdockerId,jdbcType=VARCHAR}
+    where sr_id = #{srId,jdbcType=INTEGER}
+  </update>
+</mapper>

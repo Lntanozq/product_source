@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.QuarantineRegistrationMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.QuarantineRegistration">
+    <id column="gr_id" jdbcType="INTEGER" property="grId" />
+    <result column="gr_time" jdbcType="VARCHAR" property="grTime" />
+    <result column="gr_img" jdbcType="VARCHAR" property="grImg" />
+    <result column="gr_mechanism" jdbcType="VARCHAR" property="grMechanism" />
+    <result column="gr_batch_id" jdbcType="VARCHAR" property="grBatchId" />
+    <result column="gr_uquarantiner_id" jdbcType="VARCHAR" property="grUquarantinerId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    gr_id, gr_time, gr_img, gr_mechanism, gr_batch_id, gr_uquarantiner_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from quarantine_registration
+    where gr_id = #{grId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from quarantine_registration
+    where gr_id = #{grId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.QuarantineRegistration">
+    insert into quarantine_registration (gr_id, gr_time, gr_img, 
+      gr_mechanism, gr_batch_id, gr_uquarantiner_id
+      )
+    values (#{grId,jdbcType=INTEGER}, #{grTime,jdbcType=VARCHAR}, #{grImg,jdbcType=VARCHAR}, 
+      #{grMechanism,jdbcType=VARCHAR}, #{grBatchId,jdbcType=VARCHAR}, #{grUquarantinerId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.QuarantineRegistration">
+    insert into quarantine_registration
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="grId != null">
+        gr_id,
+      </if>
+      <if test="grTime != null">
+        gr_time,
+      </if>
+      <if test="grImg != null">
+        gr_img,
+      </if>
+      <if test="grMechanism != null">
+        gr_mechanism,
+      </if>
+      <if test="grBatchId != null">
+        gr_batch_id,
+      </if>
+      <if test="grUquarantinerId != null">
+        gr_uquarantiner_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="grId != null">
+        #{grId,jdbcType=INTEGER},
+      </if>
+      <if test="grTime != null">
+        #{grTime,jdbcType=VARCHAR},
+      </if>
+      <if test="grImg != null">
+        #{grImg,jdbcType=VARCHAR},
+      </if>
+      <if test="grMechanism != null">
+        #{grMechanism,jdbcType=VARCHAR},
+      </if>
+      <if test="grBatchId != null">
+        #{grBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="grUquarantinerId != null">
+        #{grUquarantinerId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.QuarantineRegistration">
+    update quarantine_registration
+    <set>
+      <if test="grTime != null">
+        gr_time = #{grTime,jdbcType=VARCHAR},
+      </if>
+      <if test="grImg != null">
+        gr_img = #{grImg,jdbcType=VARCHAR},
+      </if>
+      <if test="grMechanism != null">
+        gr_mechanism = #{grMechanism,jdbcType=VARCHAR},
+      </if>
+      <if test="grBatchId != null">
+        gr_batch_id = #{grBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="grUquarantinerId != null">
+        gr_uquarantiner_id = #{grUquarantinerId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where gr_id = #{grId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.QuarantineRegistration">
+    update quarantine_registration
+    set gr_time = #{grTime,jdbcType=VARCHAR},
+      gr_img = #{grImg,jdbcType=VARCHAR},
+      gr_mechanism = #{grMechanism,jdbcType=VARCHAR},
+      gr_batch_id = #{grBatchId,jdbcType=VARCHAR},
+      gr_uquarantiner_id = #{grUquarantinerId,jdbcType=VARCHAR}
+    where gr_id = #{grId,jdbcType=INTEGER}
+  </update>
+</mapper>

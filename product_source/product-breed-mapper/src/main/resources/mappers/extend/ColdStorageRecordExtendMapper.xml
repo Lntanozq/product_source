@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ColdStorageRecordExtendMapper">
+    <resultMap id="ColdStorageRecordMap" type="com.briup.framework.bean.extend.ColdStorageRecordExtend" extends="com.briup.framework.mapper.ManagerFreezerMapper.BaseResultMap">
+    </resultMap>
+    <resultMap id="ColdStorageRecordMap1" type="com.briup.framework.bean.extend.ColdStorageRecordExtend1" extends="com.briup.framework.mapper.ColdStorageRecordMapper.BaseResultMap">
+        <association property="managerFreezer" resultMap="com.briup.framework.mapper.ManagerFreezerMapper.BaseResultMap"/>
+        <association property="baseAccount" resultMap="com.briup.framework.base.mapper.basic.BaseAccountMapper.BaseResultMap"/>
+    </resultMap>
+    <select id="queryFreezer"  resultMap="ColdStorageRecordMap">
+        select
+            fz.fz_id, fz.fz_name, fz.fz_num, fz.fz_area, fz.fz_quantity,
+               fz.fz_temperature, fz.fz_humidity, fz.fz_ucold_id,
+            fz.fz_delete
+       from manager_freezer fz,(select distinct csr_cold_id from cold_storage_record where csr_out_time is null) cc
+         where cc.csr_cold_id=fz.fz_id
+    </select>
+    <select id="queryAnimal" resultType="int"  resultMap="com.briup.framework.mapper.ManagerAnimalMapper.BaseResultMap">
+        select
+            a_animal_id, a_weight, a_gender, a_healthy, a_status, a_inoculate, a_time, a_backup1,
+            a_backup2, a_backup3, a_batch_id, a_hurdles_id
+        from cold_storage_record cr,manager_animal a
+        where cr.csr_animal_id=a_animal_id and a_backup2='0' and cr.csr_out_time is null and cr.csr_cold_id=#{freezerId}
+    </select>
+<select id="queryByAnimalId" parameterType="String" resultMap="ColdStorageRecordMap1">
+  select
+      csr_id, csr_into_time, csr_out_time, csr_animal_id, csr_cold_id, csr_ucold_id,
+      fz_id, fz_name, fz_num, fz_area, fz_quantity, fz_temperature, fz_humidity, fz_ucold_id,
+      fz_delete,
+      account_id, username, password, avatar, email, mobile, status, create_user_id,
+      create_time, modifier_user_id, modifier_time
+    from cold_storage_record,manager_freezer,base_account
+     where
+      csr_cold_id=fz_id and csr_ucold_id=account_id
+      and csr_animal_id=#{animalId}
+</select>
+</mapper>

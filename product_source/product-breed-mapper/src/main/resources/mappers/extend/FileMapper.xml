@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.briup.framework.mapper.extend.FileMapper">
+    <select id="getPathsInDB" resultType="string">
+        select f_img as img from manager_feed
+            union all
+        select gr_img as img from quarantine_registration
+            union all
+        select b_quarantine_img as img from manager_batch
+    </select>
+</mapper>

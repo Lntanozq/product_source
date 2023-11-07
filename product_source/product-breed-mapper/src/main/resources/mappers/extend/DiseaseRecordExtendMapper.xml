@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.DiseaseRecordExtendMapper">
+
+    <!-- 获取病症记录(含病症信息 医护人员信息) -->
+    <resultMap id="recordMapWithDiseaseAndAccount" type="com.briup.framework.bean.extend.DiseaseRecordExtend"
+               extends="com.briup.framework.mapper.DiseaseRecordMapper.BaseResultMap">
+        <association property="disease" resultMap="com.briup.framework.mapper.ManagerDiseaseMapper.BaseResultMap"></association>
+        <association property="account" resultMap="com.briup.framework.mapper.extend.ManagerFreezerExtendMapper.UserExtendMap1"/>
+    </resultMap>
+
+    <!-- 提取where条件 -->
+    <sql id="WhereDrIdIn_Sql">
+        <where>
+            dr_id in
+            <foreach collection="drIds" separator="," item="drId" open="(" close=")">
+                #{drId}
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="queryAllAnimalIdsByRecodeIds" resultType="java.lang.String">
+        select distinct dr_animal_id
+        from disease_record
+        <include refid="WhereDrIdIn_Sql"></include>
+    </select>
+
+
+    <delete id="deleteAllByRecodeIds">
+        delete from disease_record
+        <include refid="WhereDrIdIn_Sql"></include>
+    </delete>
+
+    <select id="queryAllRecords" resultMap="recordMapWithDiseaseAndAccount">
+        select sr.*,md.*,ba.*,br.*
+        from disease_record sr,manager_disease md,base_account ba,base_role br,base_account_role_r bar
+        where sr.dr_d_id = md.d_id
+            and sr.dr_udocker_id = ba.account_id
+            and ba.account_id = bar.account_id
+            and bar.role_id = br.role_id
+        ORDER BY STR_TO_DATE(sr.dr_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+
+    <select id="query" resultMap="recordMapWithDiseaseAndAccount">
+        select sr.*,md.*,
+               ba.account_id, ba.username, ba.password, ba.avatar,
+            ba.email, ba.mobile, ba.status, ba.create_user_id,
+            ba.create_time, ba.modifier_user_id, ba.modifier_time,
+            br.role_id, br.role_name, br.remark, br.create_user_id, br.create_time, br.modifer_user_id,
+            br.modifer_time
+        from disease_record sr,manager_disease md,manager_animal ma,base_account ba,base_role br,base_account_role_r bar
+        where sr.dr_d_id = md.d_id
+            and sr.dr_udocker_id = ba.account_id
+            and sr.dr_animal_id = ma.a_animal_id
+            and ba.account_id = bar.account_id
+            and bar.role_id = br.role_id
+            and ma.a_backup2='0'
+            <if test="drAnimalId != null">
+                and sr.dr_animal_id like concat('%',#{drAnimalId},'%')
+            </if>
+            <if test="drStatus != null">
+                and sr.dr_status = #{drStatus}
+            </if>
+            <if test="drDId != null">
+                and sr.dr_d_id = #{drDId}
+            </if>
+            <if test="drUdockerId != null">
+                and sr.dr_udocker_id = #{drUdockerId}
+            </if>
+            <if test="startTime != null">
+                and sr.dr_time >= STR_TO_DATE(#{startTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="endTime != null">
+                and sr.dr_time <![CDATA[ <= ]]> STR_TO_DATE(#{endTime},'%Y-%m-%d %H:%i:%s')
+            </if>
+        ORDER BY STR_TO_DATE(sr.dr_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+
+</mapper>

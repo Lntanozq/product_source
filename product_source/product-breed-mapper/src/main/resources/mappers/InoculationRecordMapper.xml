@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.InoculationRecordMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.InoculationRecord">
+    <id column="ir_id" jdbcType="INTEGER" property="irId" />
+    <result column="ir_time" jdbcType="VARCHAR" property="irTime" />
+    <result column="ir_capacity" jdbcType="VARCHAR" property="irCapacity" />
+    <result column="ir_uinoculation_id" jdbcType="VARCHAR" property="irUinoculationId" />
+    <result column="ir_vaccines_id" jdbcType="VARCHAR" property="irVaccinesId" />
+    <result column="ir_animal_id" jdbcType="VARCHAR" property="irAnimalId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ir_id, ir_time, ir_capacity, ir_uinoculation_id, ir_vaccines_id, ir_animal_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from inoculation_record
+    where ir_id = #{irId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from inoculation_record
+    where ir_id = #{irId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.InoculationRecord">
+    insert into inoculation_record (ir_id, ir_time, ir_capacity, 
+      ir_uinoculation_id, ir_vaccines_id, ir_animal_id
+      )
+    values (#{irId,jdbcType=INTEGER}, #{irTime,jdbcType=VARCHAR}, #{irCapacity,jdbcType=VARCHAR}, 
+      #{irUinoculationId,jdbcType=VARCHAR}, #{irVaccinesId,jdbcType=VARCHAR}, #{irAnimalId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.InoculationRecord">
+    insert into inoculation_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="irId != null">
+        ir_id,
+      </if>
+      <if test="irTime != null">
+        ir_time,
+      </if>
+      <if test="irCapacity != null">
+        ir_capacity,
+      </if>
+      <if test="irUinoculationId != null">
+        ir_uinoculation_id,
+      </if>
+      <if test="irVaccinesId != null">
+        ir_vaccines_id,
+      </if>
+      <if test="irAnimalId != null">
+        ir_animal_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="irId != null">
+        #{irId,jdbcType=INTEGER},
+      </if>
+      <if test="irTime != null">
+        #{irTime,jdbcType=VARCHAR},
+      </if>
+      <if test="irCapacity != null">
+        #{irCapacity,jdbcType=VARCHAR},
+      </if>
+      <if test="irUinoculationId != null">
+        #{irUinoculationId,jdbcType=VARCHAR},
+      </if>
+      <if test="irVaccinesId != null">
+        #{irVaccinesId,jdbcType=VARCHAR},
+      </if>
+      <if test="irAnimalId != null">
+        #{irAnimalId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.InoculationRecord">
+    update inoculation_record
+    <set>
+      <if test="irTime != null">
+        ir_time = #{irTime,jdbcType=VARCHAR},
+      </if>
+      <if test="irCapacity != null">
+        ir_capacity = #{irCapacity,jdbcType=VARCHAR},
+      </if>
+      <if test="irUinoculationId != null">
+        ir_uinoculation_id = #{irUinoculationId,jdbcType=VARCHAR},
+      </if>
+      <if test="irVaccinesId != null">
+        ir_vaccines_id = #{irVaccinesId,jdbcType=VARCHAR},
+      </if>
+      <if test="irAnimalId != null">
+        ir_animal_id = #{irAnimalId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ir_id = #{irId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.InoculationRecord">
+    update inoculation_record
+    set ir_time = #{irTime,jdbcType=VARCHAR},
+      ir_capacity = #{irCapacity,jdbcType=VARCHAR},
+      ir_uinoculation_id = #{irUinoculationId,jdbcType=VARCHAR},
+      ir_vaccines_id = #{irVaccinesId,jdbcType=VARCHAR},
+      ir_animal_id = #{irAnimalId,jdbcType=VARCHAR}
+    where ir_id = #{irId,jdbcType=INTEGER}
+  </update>
+</mapper>

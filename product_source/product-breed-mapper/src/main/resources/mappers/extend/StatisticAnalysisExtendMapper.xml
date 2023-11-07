@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.StatisticAnalysisExtendMapper">
+    <select id="countFenceHouse" resultType="int">
+         select count(*)
+         from manager_fence_house
+         where fh_delete=0
+    </select>
+    <select id="countHurdles" resultType="int">
+        select count(*)
+        from manager_hurdles
+        where h_delete=0
+    </select>
+    <select id="countAnimal" resultType="int">
+         select count(*)
+         from manager_animal
+         where a_backup2='0'
+    </select>
+    <select id="countFreezer" resultType="int">
+        select count(*)
+        from manager_freezer
+        where fz_delete=0
+    </select>
+    <select id="countAccount" resultType="int">
+        select count(*)
+        from base_account
+        where status = 1
+    </select>
+    <select id="countIssueRecord" resultType="map" parameterType="String">
+       select count(ma.a_animal_id) num,month(ir.isr_time) mon
+       from issue_record ir,manager_animal ma
+       where ir.isr_status='已完成' and ir.isr_id = ma.a_backup1
+             and year(ir.isr_time) = '2022'
+       group by month(ir.isr_time)
+    </select>
+    <select id="countDiseaseRecord" resultType="map">
+        SELECT md.d_name dname,count(*) num
+        FROM manager_disease md,disease_record dr
+        where md.d_id=dr.dr_d_id
+        group by md.d_id
+    </select>
+</mapper>

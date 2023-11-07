@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.SlaughterRegistrationExtendMapper">
+
+    <resultMap id="SlaughterRegistrationExtendResultMap" type="com.briup.framework.bean.extend.SlaughterRegistrationExtend"
+        extends="com.briup.framework.mapper.SlaughterRegistrationMapper.BaseResultMap">
+        <association property="slaughteringGroup" resultMap="com.briup.framework.mapper.extend.ManagerSlaughteringGroupExtendMapper.ManagerSGroupExtendResult"></association>
+    </resultMap>
+
+    <select id="selectRecordByBatchId" resultMap="com.briup.framework.mapper.SlaughterRegistrationMapper.BaseResultMap">
+        select srn_id,srn_batch_id,srn_group_id,srn_time
+        from slaughter_registration
+        where srn_batch_id = #{batchId}
+    </select>
+
+    <select id="selectRecordWithSGroupByBatchId"
+            resultMap="SlaughterRegistrationExtendResultMap">
+        select sr.*,msg.*,ba.*
+        from slaughter_registration sr LEFT OUTER JOIN manager_slaughtering_group msg
+            on sr.srn_group_id = msg.sg_id
+        LEFT OUTER JOIN group_user gu
+            on msg.sg_id=gu.gu_group_id
+        LEFT OUTER JOIN base_account ba
+            on gu.gu_slaughter_id=ba.account_id
+        where msg.sg_id in (
+            select srn_group_id
+            from slaughter_registration
+            where srn_batch_id=#{batchId}
+        )
+        <!-- and msg.sg_delete=0 -->
+    </select>
+
+</mapper>

@@ -1,0 +1,5 @@
+# Project exclude paths
+/product-breed/target/
+/product-breed-mapper/target/
+/product-code-generator/target/
+/product-common/target/

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.IssueRecordExtendMapper">
+  <resultMap id="IssueRecordExtendMap" type="com.briup.framework.bean.extend.IssueRecordExtend" extends="com.briup.framework.mapper.IssueRecordMapper.BaseResultMap">
+    <association property="account" resultMap="com.briup.framework.base.mapper.ext.BaseAccountExtMapper.baseResult"></association>
+   <association property="managerCustomer" resultMap="com.briup.framework.mapper.ManagerCustomerMapper.BaseResultMap"></association>
+
+  </resultMap>
+  <delete id="deleteInBatch" parameterType="List">
+    delete from  issue_record
+    where isr_id in
+    <foreach collection="ids" open="("  separator="," close=")" item="id">
+      #{id}
+    </foreach>
+  </delete>
+
+  <delete id="deleteById" parameterType="int">
+        delete from  issue_record
+        where isr_id = #{isrId}
+    </delete>
+
+  <select id="queryAll" resultMap="com.briup.framework.mapper.IssueRecordMapper.BaseResultMap">
+        select  isr_id, isr_time, isr_num, isr_price, isr_deliver, isr_status, isr_sale_id, isr_customer_id
+        from  issue_record
+        order by STR_TO_DATE(isr_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+
+  <select id="query" resultMap="IssueRecordExtendMap">
+    select ac.account_id, username, password, avatar, email, mobile, status, br.role_id,br.role_name,br.remark,c.*,mc.*
+    from  issue_record c
+    left join base_account ac on c.isr_sale_id = ac.account_id
+    left join base_account_role_r r on ac.account_id = r.account_id
+    left join base_role br on r.role_id = br.role_id
+    left join manager_customer mc on c.isr_customer_id = mc.c_id
+    <where>
+      <if test="isrSaleId != null">
+        and c.isr_sale_id = #{isrSaleId}
+      </if>
+      <if test="isrStatus != null">
+        and c.isr_status = #{isrStatus}
+      </if>
+      <if test="startTime != null">
+        and STR_TO_DATE(c.isr_time,'%Y-%m-%d %H:%i:%s') >= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and STR_TO_DATE(c.isr_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endTime}
+      </if>
+      <if test="startDeliver != null">
+        and STR_TO_DATE(c.isr_deliver,'%Y-%m-%d %H:%i:%s') >= #{startDeliver}
+      </if>
+      <if test="endDeliver != null">
+        and STR_TO_DATE(c.isr_deliver,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endDeliver}
+      </if>
+    </where>
+    order by STR_TO_DATE(c.isr_time,'%Y-%m-%d %H:%i:%s') desc
+  </select>
+  <select id="queryAllUser" resultMap="com.briup.framework.base.mapper.ext.BaseAccountExtMapper.baseResult">
+       select ac.account_id, username, password, avatar, email, mobile, status, br.role_id,br.role_name,br.remark
+       from base_account ac
+       left join base_account_role_r r on ac.account_id = r.account_id
+       left join base_role br on r.role_id = br.role_id
+       where ac.account_id in (select distinct isr_sale_id
+                                from issue_record)
+    </select>
+
+    <update id="updateStatus">
+        update issue_record
+        set isr_status = #{isrStatus}
+        where isr_id = #{isrId}
+    </update>
+
+    <select id="selectById" resultMap="IssueRecordExtendMap" parameterType="int">
+        select ac.account_id, username, password, avatar, email, mobile, status, br.role_id,br.role_name,br.remark,c.*,mc.*
+        from  issue_record c
+        left join base_account ac on c.isr_sale_id = ac.account_id
+        left join base_account_role_r r on ac.account_id = r.account_id
+        left join base_role br on r.role_id = br.role_id
+        left join manager_customer mc on c.isr_customer_id = mc.c_id
+        where isr_id = #{isrId} and isr_status = '已完成'
+        order by STR_TO_DATE(c.isr_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+</mapper>

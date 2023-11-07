@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.IndexRecordMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.IndexRecord">
+    <id column="ird_id" jdbcType="INTEGER" property="irdId" />
+    <result column="ird_weight" jdbcType="VARCHAR" property="irdWeight" />
+    <result column="ird_time" jdbcType="VARCHAR" property="irdTime" />
+    <result column="ird_healthy" jdbcType="VARCHAR" property="irdHealthy" />
+    <result column="ird_temperature" jdbcType="VARCHAR" property="irdTemperature" />
+    <result column="ird_breathing" jdbcType="VARCHAR" property="irdBreathing" />
+    <result column="ird_heart_rate" jdbcType="VARCHAR" property="irdHeartRate" />
+    <result column="ird_animal_id" jdbcType="VARCHAR" property="irdAnimalId" />
+    <result column="ird_ubreed_id" jdbcType="VARCHAR" property="irdUbreedId" />
+    <result column="ird_backup1" jdbcType="VARCHAR" property="irdBackup1" />
+    <result column="ird_backup2" jdbcType="VARCHAR" property="irdBackup2" />
+    <result column="ird_backup3" jdbcType="VARCHAR" property="irdBackup3" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ird_id, ird_weight, ird_time, ird_healthy, ird_temperature, ird_breathing, ird_heart_rate, 
+    ird_animal_id, ird_ubreed_id, ird_backup1, ird_backup2, ird_backup3
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from index_record
+    where ird_id = #{irdId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from index_record
+    where ird_id = #{irdId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.IndexRecord">
+    insert into index_record (ird_id, ird_weight, ird_time, 
+      ird_healthy, ird_temperature, ird_breathing, 
+      ird_heart_rate, ird_animal_id, ird_ubreed_id, 
+      ird_backup1, ird_backup2, ird_backup3
+      )
+    values (#{irdId,jdbcType=INTEGER}, #{irdWeight,jdbcType=VARCHAR}, #{irdTime,jdbcType=VARCHAR}, 
+      #{irdHealthy,jdbcType=VARCHAR}, #{irdTemperature,jdbcType=VARCHAR}, #{irdBreathing,jdbcType=VARCHAR}, 
+      #{irdHeartRate,jdbcType=VARCHAR}, #{irdAnimalId,jdbcType=VARCHAR}, #{irdUbreedId,jdbcType=VARCHAR}, 
+      #{irdBackup1,jdbcType=VARCHAR}, #{irdBackup2,jdbcType=VARCHAR}, #{irdBackup3,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.IndexRecord">
+    insert into index_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="irdId != null">
+        ird_id,
+      </if>
+      <if test="irdWeight != null">
+        ird_weight,
+      </if>
+      <if test="irdTime != null">
+        ird_time,
+      </if>
+      <if test="irdHealthy != null">
+        ird_healthy,
+      </if>
+      <if test="irdTemperature != null">
+        ird_temperature,
+      </if>
+      <if test="irdBreathing != null">
+        ird_breathing,
+      </if>
+      <if test="irdHeartRate != null">
+        ird_heart_rate,
+      </if>
+      <if test="irdAnimalId != null">
+        ird_animal_id,
+      </if>
+      <if test="irdUbreedId != null">
+        ird_ubreed_id,
+      </if>
+      <if test="irdBackup1 != null">
+        ird_backup1,
+      </if>
+      <if test="irdBackup2 != null">
+        ird_backup2,
+      </if>
+      <if test="irdBackup3 != null">
+        ird_backup3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="irdId != null">
+        #{irdId,jdbcType=INTEGER},
+      </if>
+      <if test="irdWeight != null">
+        #{irdWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="irdTime != null">
+        #{irdTime,jdbcType=VARCHAR},
+      </if>
+      <if test="irdHealthy != null">
+        #{irdHealthy,jdbcType=VARCHAR},
+      </if>
+      <if test="irdTemperature != null">
+        #{irdTemperature,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBreathing != null">
+        #{irdBreathing,jdbcType=VARCHAR},
+      </if>
+      <if test="irdHeartRate != null">
+        #{irdHeartRate,jdbcType=VARCHAR},
+      </if>
+      <if test="irdAnimalId != null">
+        #{irdAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="irdUbreedId != null">
+        #{irdUbreedId,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBackup1 != null">
+        #{irdBackup1,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBackup2 != null">
+        #{irdBackup2,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBackup3 != null">
+        #{irdBackup3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.IndexRecord">
+    update index_record
+    <set>
+      <if test="irdWeight != null">
+        ird_weight = #{irdWeight,jdbcType=VARCHAR},
+      </if>
+      <if test="irdTime != null">
+        ird_time = #{irdTime,jdbcType=VARCHAR},
+      </if>
+      <if test="irdHealthy != null">
+        ird_healthy = #{irdHealthy,jdbcType=VARCHAR},
+      </if>
+      <if test="irdTemperature != null">
+        ird_temperature = #{irdTemperature,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBreathing != null">
+        ird_breathing = #{irdBreathing,jdbcType=VARCHAR},
+      </if>
+      <if test="irdHeartRate != null">
+        ird_heart_rate = #{irdHeartRate,jdbcType=VARCHAR},
+      </if>
+      <if test="irdAnimalId != null">
+        ird_animal_id = #{irdAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="irdUbreedId != null">
+        ird_ubreed_id = #{irdUbreedId,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBackup1 != null">
+        ird_backup1 = #{irdBackup1,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBackup2 != null">
+        ird_backup2 = #{irdBackup2,jdbcType=VARCHAR},
+      </if>
+      <if test="irdBackup3 != null">
+        ird_backup3 = #{irdBackup3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ird_id = #{irdId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.IndexRecord">
+    update index_record
+    set ird_weight = #{irdWeight,jdbcType=VARCHAR},
+      ird_time = #{irdTime,jdbcType=VARCHAR},
+      ird_healthy = #{irdHealthy,jdbcType=VARCHAR},
+      ird_temperature = #{irdTemperature,jdbcType=VARCHAR},
+      ird_breathing = #{irdBreathing,jdbcType=VARCHAR},
+      ird_heart_rate = #{irdHeartRate,jdbcType=VARCHAR},
+      ird_animal_id = #{irdAnimalId,jdbcType=VARCHAR},
+      ird_ubreed_id = #{irdUbreedId,jdbcType=VARCHAR},
+      ird_backup1 = #{irdBackup1,jdbcType=VARCHAR},
+      ird_backup2 = #{irdBackup2,jdbcType=VARCHAR},
+      ird_backup3 = #{irdBackup3,jdbcType=VARCHAR}
+    where ird_id = #{irdId,jdbcType=INTEGER}
+  </update>
+</mapper>

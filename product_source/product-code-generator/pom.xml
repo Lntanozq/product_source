@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>product_source</artifactId>
+        <groupId>com.briup.framework</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>product-code-generator</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>${mybatis-generator-maven-plugin.version}</version>
+                <configuration>
+                    <!--配置文件的位置-->
+                    <!--
+                                        <configurationFile>src/main/resources/generatorConfig-user.xml</configurationFile>
+                    -->
+                    <!--
+                                        <configurationFile>src/main/resources/generatorConfig-dataset.xml</configurationFile>
+                    -->
+                    <!--
+                                        <configurationFile>src/main/resources/generatorConfig-operator.xml</configurationFile>
+                    -->
+                    <!--
+                                        <configurationFile>src/main/resources/generatorConfig-model.xml</configurationFile>
+                    -->
+                    <!--
+                                        <configurationFile>src/main/resources/generatorConfig-release.xml</configurationFile>
+                    -->
+                    <configurationFile>src/main/resources/generatorConfig-user.xml</configurationFile>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.mybatis.generator</groupId>
+                        <artifactId>mybatis-generator-core</artifactId>
+                        <version>${mybatis-generator-core.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql-connector-java.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- 跳过repackage目标 -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.FeedRecordExtendMapper">
+    <resultMap id="FeedRecordExtendMap" type="com.briup.framework.bean.extend.FeedRecordExtend" extends="com.briup.framework.mapper.FeedRecordMapper.BaseResultMap">
+        <association property="managerBatch" resultMap="com.briup.framework.mapper.ManagerBatchMapper.BaseResultMap"/>
+        <association property="managerFeed" resultMap="com.briup.framework.mapper.ManagerFeedMapper.BaseResultMap"/>
+        <association property="baseAccount" resultMap="com.briup.framework.mapper.extend.ManagerFreezerExtendMapper.UserExtendMap1"/>
+    </resultMap>
+<select id="query" resultMap="FeedRecordExtendMap">
+    select
+    fr.fr_id,fr.fr_reason, fr.fr_time, fr.fr_batch_id, fr.fr_ubreed_id, fr.fr_feed_id,
+    b.b_serial_id, b.b_desc, b.b_quarantine, b.b_qualified, b.b_quarantine_img,
+           b.b_time, b.b_delete,
+    f.f_id, f.f_name, f.f_supplier, f.f_price, f.f_type, f.f_img, f.f_desc, f.f_time, f.f_delete,
+    a.account_id, a.username, a.password, a.avatar,
+    a.email, a.mobile, a.status, a.create_user_id,
+    a.create_time, a.modifier_user_id, a.modifier_time,
+    r.role_id, r.role_name, r.remark, r.create_user_id, r.create_time, r.modifer_user_id,
+    r.modifer_time
+    from
+      feed_record fr,manager_batch b,manager_feed f,base_account a,base_role r,base_account_role_r ar
+    <where>
+    fr.fr_batch_id=b.b_serial_id and fr.fr_ubreed_id=a.account_id and fr.fr_feed_id=f.f_id
+      and b.b_delete=0
+    and    a.account_id=ar.account_id and r.role_id=ar.role_id
+        <if test="frBatchId != null">
+            AND fr.fr_batch_id like concat('%',#{frBatchId},'%')
+        </if>
+        <if test="feedName != null">
+            AND f.f_name like concat('%',#{feedName},'%')
+        </if>
+    </where>
+    order by STR_TO_DATE(fr.fr_time,'%Y-%m-%d %H:%i:%s') desc
+</select>
+</mapper>

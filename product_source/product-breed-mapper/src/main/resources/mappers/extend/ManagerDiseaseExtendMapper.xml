@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ManagerDiseaseExtendMapper">
+    <update id="deleteAllByIds" parameterType="List">
+        update manager_disease
+        set d_delete = 1
+        where d_id in
+        <foreach collection="dIds" item="dId" open="(" separator="," close=")">
+            #{dId}
+        </foreach>
+    </update>
+
+    <select id="queryAll" resultMap="com.briup.framework.mapper.ManagerDiseaseMapper.BaseResultMap">
+        select * from manager_disease where d_delete=0
+    </select>
+
+    <select id="query" resultMap="com.briup.framework.mapper.ManagerDiseaseMapper.BaseResultMap">
+        select d_id, d_name, d_desc, d_type, d_etiology, d_symptom, d_prevention, d_delete
+        from manager_disease
+        <where>
+            <!-- AND d_delete=0 -->
+            <if test="dName != null">
+                AND d_name like concat('%',#{dName},'%')
+            </if>
+            <if test="dType != null">
+                AND d_type like concat('%',#{dType},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="com.briup.framework.mapper.ManagerDiseaseMapper.BaseResultMap">
+        select *
+        from manager_disease
+        where d_delete = 0
+        and d_id = #{diseaseId}
+    </select>
+
+
+</mapper>

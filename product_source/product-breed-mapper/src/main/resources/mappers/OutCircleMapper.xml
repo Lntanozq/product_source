@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.OutCircleMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.OutCircle">
+    <id column="oc_id" jdbcType="INTEGER" property="ocId" />
+    <result column="oc_time" jdbcType="VARCHAR" property="ocTime" />
+    <result column="oc_batch_id" jdbcType="VARCHAR" property="ocBatchId" />
+    <result column="oc_ubreed_id" jdbcType="VARCHAR" property="ocUbreedId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    oc_id, oc_time, oc_batch_id, oc_ubreed_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from out_circle
+    where oc_id = #{ocId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from out_circle
+    where oc_id = #{ocId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.OutCircle">
+    insert into out_circle (oc_id, oc_time, oc_batch_id, 
+      oc_ubreed_id)
+    values (#{ocId,jdbcType=INTEGER}, #{ocTime,jdbcType=VARCHAR}, #{ocBatchId,jdbcType=VARCHAR}, 
+      #{ocUbreedId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.OutCircle">
+    insert into out_circle
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ocId != null">
+        oc_id,
+      </if>
+      <if test="ocTime != null">
+        oc_time,
+      </if>
+      <if test="ocBatchId != null">
+        oc_batch_id,
+      </if>
+      <if test="ocUbreedId != null">
+        oc_ubreed_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ocId != null">
+        #{ocId,jdbcType=INTEGER},
+      </if>
+      <if test="ocTime != null">
+        #{ocTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ocBatchId != null">
+        #{ocBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="ocUbreedId != null">
+        #{ocUbreedId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.OutCircle">
+    update out_circle
+    <set>
+      <if test="ocTime != null">
+        oc_time = #{ocTime,jdbcType=VARCHAR},
+      </if>
+      <if test="ocBatchId != null">
+        oc_batch_id = #{ocBatchId,jdbcType=VARCHAR},
+      </if>
+      <if test="ocUbreedId != null">
+        oc_ubreed_id = #{ocUbreedId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where oc_id = #{ocId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.OutCircle">
+    update out_circle
+    set oc_time = #{ocTime,jdbcType=VARCHAR},
+      oc_batch_id = #{ocBatchId,jdbcType=VARCHAR},
+      oc_ubreed_id = #{ocUbreedId,jdbcType=VARCHAR}
+    where oc_id = #{ocId,jdbcType=INTEGER}
+  </update>
+</mapper>

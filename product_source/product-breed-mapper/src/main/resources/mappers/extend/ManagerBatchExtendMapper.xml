@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ManagerBatchExtendMapper">
+  <resultMap id="ManagerBatchExtendMap" type="com.briup.framework.bean.extend.ManagerBatchExtend" extends="com.briup.framework.mapper.ManagerBatchMapper.BaseResultMap">
+      <result property="count" column="num"></result>
+      <result property="astatus" column="astatus"></result>
+  </resultMap>
+
+    <update id="deleteInBatch" parameterType="List">
+        update manager_batch
+        set  b_delete=1
+        where b_serial_id in
+        <foreach collection="ids" open="("  separator="," close=")" item="serialId">
+            #{serialId}
+        </foreach>
+    </update>
+
+  <update id="updateBySerialId" parameterType="String">
+         update manager_batch
+         set  b_delete=1
+         where b_serial_id=#{serialId}
+  </update>
+
+  <select id="queryAll" resultMap="com.briup.framework.mapper.ManagerBatchMapper.BaseResultMap">
+    select b_serial_id, b_desc, b_quarantine, b_qualified, b_quarantine_img, b_time, b_delete
+    from manager_batch
+    where b_delete=0
+    order by STR_TO_DATE(b_time,'%Y-%m-%d %H:%i:%s') desc
+  </select>
+
+   <select id="selectById" parameterType="String" resultMap="ManagerBatchExtendMap">
+    select a.num,a.status,b.b_serial_id, b.b_desc, b.b_quarantine, b.b_qualified, b.b_quarantine_img, b.b_time, b.b_delete
+    from manager_batch b left join ( select count(a_animal_id) num,a_batch_id,GROUP_CONCAT(DISTINCT a_status) status
+                                        from manager_animal
+                                        group by a_batch_id) a
+    on b.b_serial_id=a.a_batch_id
+    where  b.b_delete=0 and  b.b_serial_id = #{serialId}
+    order by STR_TO_DATE(b.b_time,'%Y-%m-%d %H:%i:%s') desc
+   </select>
+
+    <select id="query" resultMap="ManagerBatchExtendMap">
+        select a.num,a.astatus,b.b_serial_id, b.b_desc, b.b_quarantine, b.b_qualified, b.b_quarantine_img, b.b_time, b.b_delete
+        from manager_batch b left join ( select count(a_animal_id) num,a_batch_id,GROUP_CONCAT(DISTINCT a_status) astatus
+                                        from manager_animal
+                                        group by a_batch_id) a
+        on b.b_serial_id=a.a_batch_id
+        <where>
+            b.b_delete=0
+            <if test="serialId != null">
+                and b.b_serial_id = #{serialId}
+            </if>
+            <if test="start != null">
+                and STR_TO_DATE(b.b_time,'%Y-%m-%d %H:%i:%s') >= #{start}
+            </if>
+            <if test="end != null">
+                AND STR_TO_DATE(b.b_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{end}
+             </if>
+            <if test="quarantine != null">
+                and b.b_quarantine = #{quarantine}
+            </if>
+            <if test="qualified != null">
+                and b.b_qualified = #{qualified}
+            </if>
+        </where>
+        order by STR_TO_DATE(b.b_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+</mapper>

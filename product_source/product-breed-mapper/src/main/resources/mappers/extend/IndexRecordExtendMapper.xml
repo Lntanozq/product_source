@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.IndexRecordExtendMapper">
+    <resultMap id="IndexRecordExtendMap" type="com.briup.framework.bean.extend.IndexRecordExtend" extends="com.briup.framework.mapper.IndexRecordMapper.BaseResultMap">
+        <association property="managerAnimal" resultMap="com.briup.framework.mapper.ManagerAnimalMapper.BaseResultMap"/>
+        <association property="baseAccount" resultMap="com.briup.framework.mapper.extend.ManagerFreezerExtendMapper.UserExtendMap1"/>
+    </resultMap>
+    <select id="queryTesting" resultMap="com.briup.framework.base.mapper.basic.BaseAccountMapper.BaseResultMap">
+        select b.account_id, b.username, b.password, b.avatar,
+               b.email, b.mobile, b.status, b.create_user_id,
+        b.create_time, b.modifier_user_id, b.modifier_time
+         from base_account b,(select distinct ird_ubreed_id from index_record) ir
+          where b.account_id=ir.ird_ubreed_id
+    </select>
+<select id="query" resultMap="IndexRecordExtendMap">
+    select  ird.ird_id, ird.ird_weight, ird.ird_time, ird.ird_healthy,
+    ird.ird_temperature, ird.ird_breathing, ird.ird_heart_rate,
+    ird.ird_animal_id, ird.ird_ubreed_id, ird.ird_backup1, ird.ird_backup2, ird.ird_backup3,
+    a.a_animal_id, a.a_weight, a.a_gender, a.a_healthy, a.a_status, a.a_inoculate, a.a_time,
+           a.a_backup1,a.a_backup2, a.a_backup3, a.a_batch_id, a.a_hurdles_id,
+    b.account_id, b.username, b.password, b.avatar,
+    b.email, b.mobile, b.status, b.create_user_id,
+    b.create_time, b.modifier_user_id, b.modifier_time,
+    r.role_id, r.role_name, r.remark, r.create_user_id, r.create_time, r.modifer_user_id,
+    r.modifer_time
+    from base_account b,index_record ird,manager_animal a,base_role r,base_account_role_r ar
+    <where>
+        ird.ird_animal_id=a.a_animal_id and ird.ird_ubreed_id=b.account_id
+        and  b.account_id=ar.account_id and r.role_id=ar.role_id
+         and a.a_backup2='0'
+        <if test="animalNumber != null">
+            AND ird.ird_animal_id like concat('%',#{animalNumber},'%')
+        </if>
+        <if test="healthy != null">
+            AND ird.ird_healthy=#{healthy}
+        </if>
+        <if test="startTime != null and endTime!=null">
+            AND STR_TO_DATE(ird.ird_time,'%Y-%m-%d %H:%i:%s')&gt;=#{startTime}
+            AND STR_TO_DATE(ird.ird_time,'%Y-%m-%d %H:%i:%s')&lt;#{endTime}
+        </if>
+        <if test="startHeartRate != null and endHeartRate!=null">
+            AND ird.ird_heart_rate&gt;=#{startHeartRate}
+            AND ird.ird_heart_rate&lt;=#{endHeartRate}
+        </if>
+        <if test="startHeartRate != null and endHeartRate==null">
+            AND ird.ird_heart_rate&gt;=#{startHeartRate}
+        </if>
+        <if test="startHeartRate == null and endHeartRate!=null">
+            AND ird.ird_heart_rate&lt;=#{endHeartRate}
+        </if>
+        <if test="startBreathing != null and endBreathing!=null">
+            AND ird.ird_breathing&gt;=#{startBreathing}
+            AND ird.ird_breathing&lt;=#{endBreathing}
+        </if>
+        <if test="startBreathing != null and endBreathing==null">
+            AND ird.ird_breathing&gt;=#{startBreathing}
+        </if>
+        <if test="startBreathing == null and endBreathing!=null">
+            AND ird.ird_breathing&lt;=#{endBreathing}
+        </if>
+        <if test="startWeight != null and endWeight!=null">
+            AND ird.ird_weight&gt;=#{startWeight}
+            AND ird.ird_weight&lt;=#{endWeight}
+        </if>
+        <if test="startWeight != null and endWeight==null">
+            AND ird.ird_weight&gt;=#{startWeight}
+        </if>
+        <if test="startWeight == null and endWeight!=null">
+            AND ird.ird_weight&lt;=#{endWeight}
+        </if>
+        <if test="ubreedId != null">
+            AND ird.ird_ubreed_id like concat('%',#{ubreedId},'%')
+        </if>
+    </where>
+    order by STR_TO_DATE(ird.ird_time,'%Y-%m-%d %H:%i:%s') desc
+</select>
+</mapper>

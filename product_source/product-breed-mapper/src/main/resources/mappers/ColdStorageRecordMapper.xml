@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.ColdStorageRecordMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.ColdStorageRecord">
+    <id column="csr_id" jdbcType="INTEGER" property="csrId" />
+    <result column="csr_into_time" jdbcType="VARCHAR" property="csrIntoTime" />
+    <result column="csr_out_time" jdbcType="VARCHAR" property="csrOutTime" />
+    <result column="csr_animal_id" jdbcType="VARCHAR" property="csrAnimalId" />
+    <result column="csr_cold_id" jdbcType="INTEGER" property="csrColdId" />
+    <result column="csr_ucold_id" jdbcType="VARCHAR" property="csrUcoldId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    csr_id, csr_into_time, csr_out_time, csr_animal_id, csr_cold_id, csr_ucold_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cold_storage_record
+    where csr_id = #{csrId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from cold_storage_record
+    where csr_id = #{csrId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.ColdStorageRecord">
+    insert into cold_storage_record (csr_id, csr_into_time, csr_out_time, 
+      csr_animal_id, csr_cold_id, csr_ucold_id
+      )
+    values (#{csrId,jdbcType=INTEGER}, #{csrIntoTime,jdbcType=VARCHAR}, #{csrOutTime,jdbcType=VARCHAR}, 
+      #{csrAnimalId,jdbcType=VARCHAR}, #{csrColdId,jdbcType=INTEGER}, #{csrUcoldId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.ColdStorageRecord">
+    insert into cold_storage_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="csrId != null">
+        csr_id,
+      </if>
+      <if test="csrIntoTime != null">
+        csr_into_time,
+      </if>
+      <if test="csrOutTime != null">
+        csr_out_time,
+      </if>
+      <if test="csrAnimalId != null">
+        csr_animal_id,
+      </if>
+      <if test="csrColdId != null">
+        csr_cold_id,
+      </if>
+      <if test="csrUcoldId != null">
+        csr_ucold_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="csrId != null">
+        #{csrId,jdbcType=INTEGER},
+      </if>
+      <if test="csrIntoTime != null">
+        #{csrIntoTime,jdbcType=VARCHAR},
+      </if>
+      <if test="csrOutTime != null">
+        #{csrOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="csrAnimalId != null">
+        #{csrAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="csrColdId != null">
+        #{csrColdId,jdbcType=INTEGER},
+      </if>
+      <if test="csrUcoldId != null">
+        #{csrUcoldId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.ColdStorageRecord">
+    update cold_storage_record
+    <set>
+      <if test="csrIntoTime != null">
+        csr_into_time = #{csrIntoTime,jdbcType=VARCHAR},
+      </if>
+      <if test="csrOutTime != null">
+        csr_out_time = #{csrOutTime,jdbcType=VARCHAR},
+      </if>
+      <if test="csrAnimalId != null">
+        csr_animal_id = #{csrAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="csrColdId != null">
+        csr_cold_id = #{csrColdId,jdbcType=INTEGER},
+      </if>
+      <if test="csrUcoldId != null">
+        csr_ucold_id = #{csrUcoldId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where csr_id = #{csrId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.ColdStorageRecord">
+    update cold_storage_record
+    set csr_into_time = #{csrIntoTime,jdbcType=VARCHAR},
+      csr_out_time = #{csrOutTime,jdbcType=VARCHAR},
+      csr_animal_id = #{csrAnimalId,jdbcType=VARCHAR},
+      csr_cold_id = #{csrColdId,jdbcType=INTEGER},
+      csr_ucold_id = #{csrUcoldId,jdbcType=VARCHAR}
+    where csr_id = #{csrId,jdbcType=INTEGER}
+  </update>
+</mapper>

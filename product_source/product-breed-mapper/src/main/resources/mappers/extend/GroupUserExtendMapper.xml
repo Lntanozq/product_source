@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.GroupUserExtendMapper">
+
+    <delete id="deleteBySGroupId" parameterType="int">
+        delete from group_user
+        where gu_group_id = #{sgId}
+    </delete>
+
+    <delete id="deleteAllBySGroupIds" parameterType="List">
+        delete from group_user
+        where gu_group_id in
+        <foreach collection="sgIds" open="("  separator="," close=")" item="sgId">
+            #{sgId}
+        </foreach>
+    </delete>
+
+
+</mapper>

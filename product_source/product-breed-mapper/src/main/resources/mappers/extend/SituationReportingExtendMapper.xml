@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.SituationReportingExtendMapper">
+    <resultMap id="SituationReportExtendMap" type="com.briup.framework.bean.extend.SituationReportingExtend" extends="com.briup.framework.mapper.SituationReportingMapper.BaseResultMap">
+        <association property="reportUser" resultMap="com.briup.framework.mapper.extend.ManagerFreezerExtendMapper.UserExtendMap1"/>
+        <association property="doctorUser" resultMap="BaseResultMap1"/>
+    </resultMap>
+    <resultMap id="BaseResultMap1" type="com.briup.framework.base.bean.basic.BaseAccount">
+        <id column="account_id1" jdbcType="VARCHAR" property="accountId" />
+        <result column="username1" jdbcType="VARCHAR" property="username" />
+        <result column="password1" jdbcType="VARCHAR" property="password" />
+        <result column="avatar1" jdbcType="VARCHAR" property="avatar" />
+        <result column="email1" jdbcType="VARCHAR" property="email" />
+        <result column="mobile1" jdbcType="VARCHAR" property="mobile" />
+        <result column="status1" jdbcType="TINYINT" property="status" />
+        <result column="create_user_id1" jdbcType="VARCHAR" property="createUserId" />
+        <result column="create_time1" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="modifier_user_id1" jdbcType="VARCHAR" property="modifierUserId" />
+        <result column="modifier_time1" jdbcType="TIMESTAMP" property="modifierTime" />
+    </resultMap>
+   <update id="updateStatus">
+       update situation_reporting set sr_status=#{srStatus},sr_udocker_id=#{srUdockerId} where sr_id=#{srId}
+   </update>
+    <select id="query" resultMap="SituationReportExtendMap">
+        select
+        sr.sr_id, sr.sr_animal_id, sr.sr_desc, sr.sr_ubreed_id, sr.sr_time,
+               sr.sr_status, sr.sr_udocker_id,
+        b.account_id, b.username, b.password, b.avatar,
+        b.email, b.mobile, b.status, b.create_user_id,
+        b.create_time, b.modifier_user_id, b.modifier_time,
+        r.role_id, r.role_name, r.remark, r.create_user_id, r.create_time, r.modifer_user_id,
+        r.modifer_time,
+        d.account_id as account_id1, d.username as username1, d.password as password1,
+               d.avatar as avatar1,
+        d.email as email1, d.mobile as mobile1, d.status as status1,
+               d.create_user_id as create_user_id1,
+        d.create_time as create_time1, d.modifier_user_id as modifier_user_id1,
+               d.modifier_time as modifier_time
+        from
+        situation_reporting sr left join  base_account d on d.account_id=sr.sr_udocker_id,
+        base_account b,base_role r,base_account_role_r ar,manager_animal a
+        <where>
+            sr.sr_ubreed_id=b.account_id and b.account_id=ar.account_id and r.role_id=ar.role_id
+              and a.a_backup2='0' and sr.sr_animal_id=a.a_animal_id
+            <if test="srAnimalId != null">
+                AND sr.sr_animal_id like concat('%',#{srAnimalId},'%')
+            </if>
+            <if test="srStatus != null">
+                AND sr.sr_status=#{srStatus}
+            </if>
+            <if test="srUbreedId != null">
+                AND sr.sr_ubreed_id=#{srUbreedId}
+            </if>
+            <if test="srUdockerId != null">
+                AND sr.sr_udocker_id=#{srUdockerId}
+            </if>
+            <if test="startTime != null and endTime!=null">
+                AND STR_TO_DATE(sr.sr_time,'%Y-%m-%d %H:%i:%s')&gt;=#{startTime}
+                AND STR_TO_DATE(sr.sr_time,'%Y-%m-%d %H:%i:%s')&lt;#{endTime}
+            </if>
+        </where>
+        order by STR_TO_DATE(sr.sr_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+</mapper>

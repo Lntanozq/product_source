@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/product_source1?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#  redis:
+#    port: 3306
+#    host: localhost
+#mybatis
+mybatis:
+  mapper-locations:
+    - classpath*:mappers/**/*.xml
+
+#sql日志
+logging:
+  level:
+    com.briup.framework.*.mapper: debug
+server:
+  port: 9999
+
+swagger:
+  title: 农溯源产品服务
+  description: 农溯源产品服务
+  version: 1.0
+  contact:
+    name: 潘广闯
+    email: pangc@briup.com
+  base-package: com.briup.framework
+  authorization:
+    key-name: token
+    auth-regex: (?!/login|/logout)(\w|\W)*
+  base-path: /**
+
+fdfs:
+  # 连接超时时间
+  connect-timeout: 600
+  # 读取时间
+  so-timeout: 1500
+
+  tracker-list:
+    #- 192.168.23.161:22122
+    - 121.224.77.1:22122
+  # 缩略图配置
+  thumb-image:
+    width: 100
+    height: 100

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ManagerHurdlesExtendMapper">
+  <resultMap id="ManagerHurdlesExtendMap" type="com.briup.framework.bean.extend.ManagerHurdlesExtend" extends="com.briup.framework.mapper.ManagerHurdlesMapper.BaseResultMap">
+    <association property="managerFenceHouse" resultMap="com.briup.framework.mapper.ManagerFenceHouseMapper.BaseResultMap"/>
+  </resultMap>
+  <select id="query"  resultMap="ManagerHurdlesExtendMap">
+   select h.h_id, h.h_name, h.h_desc, h.h_max, h.h_saved, h.h_time,
+      h.h_enable, h.h_full, h.h_backup1, h.h_backup2,
+       h.h_backup3, h.h_delete, h.h_fence_id,
+      fh.fh_id, fh.fh_name, fh.fh_desc, fh.fh_time, fh.fh_delete
+    from manager_hurdles h left  join manager_fence_house fh on h.h_fence_id=fh.fh_id
+    <where>
+      <if test="hName != null">
+        AND h.h_name like concat('%',#{hName},'%')
+      </if>
+      <if test="hMax != null">
+        AND h.h_max=#{hMax}
+      </if>
+      <if test="fhName != null">
+        AND fh.fh_name like concat('%',#{fhName},'%')
+      </if>
+      <if test="hEnable != null">
+        AND h.h_enable like concat('%',#{hEnable},'%')
+      </if>
+    </where>
+      order by STR_TO_DATE(h.h_time,'%Y-%m-%d %H:%i:%s') desc
+  </select>
+
+<select id="queryAllMax" resultType="Integer">
+    select distinct h_max from manager_hurdles where h_delete=0
+</select>
+    <update id="updateById" parameterType="String">
+        update manager_hurdles set  h_delete=1 where h_id=#{hId}
+    </update>
+    <update id="updateByIdSaved" parameterType="String">
+        update manager_hurdles set
+            h_saved=(select h_saved from (
+                                             select h_saved from manager_hurdles where h_id=#{hId}
+                                         )
+                                          as m)+1
+        where h_id=#{hId}
+    </update>
+    <select id="selectAllHurdles" resultMap="ManagerHurdlesExtendMap">
+        select h.h_id, h.h_name, h.h_desc, h.h_max, h.h_saved, h.h_time,
+               h.h_enable, h.h_full, h.h_backup1, h.h_backup2,
+               h.h_backup3, h.h_delete, h.h_fence_id,
+               fh.fh_id, fh.fh_name, fh.fh_desc, fh.fh_time, fh.fh_delete
+        from manager_hurdles h left  join manager_fence_house fh on h.h_fence_id=fh.fh_Id
+          where   h.h_delete=0
+    </select>
+
+    <select id="selectByIdMax" parameterType="String" resultType="int">
+        select h_max from manager_hurdles where h_id=#{hId}
+    </select>
+    <select id="selectByIdSaved" parameterType="String" resultType="int">
+        select h_saved from manager_hurdles where h_id=#{hId}
+    </select>
+</mapper>

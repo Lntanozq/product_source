@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.GroupUserMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.GroupUser">
+    <id column="gu_id" jdbcType="INTEGER" property="guId" />
+    <result column="gu_group_id" jdbcType="INTEGER" property="guGroupId" />
+    <result column="gu_slaughter_id" jdbcType="VARCHAR" property="guSlaughterId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    gu_id, gu_group_id, gu_slaughter_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from group_user
+    where gu_id = #{guId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from group_user
+    where gu_id = #{guId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.GroupUser">
+    insert into group_user (gu_id, gu_group_id, gu_slaughter_id
+      )
+    values (#{guId,jdbcType=INTEGER}, #{guGroupId,jdbcType=INTEGER}, #{guSlaughterId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.GroupUser">
+    insert into group_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="guId != null">
+        gu_id,
+      </if>
+      <if test="guGroupId != null">
+        gu_group_id,
+      </if>
+      <if test="guSlaughterId != null">
+        gu_slaughter_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="guId != null">
+        #{guId,jdbcType=INTEGER},
+      </if>
+      <if test="guGroupId != null">
+        #{guGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="guSlaughterId != null">
+        #{guSlaughterId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.GroupUser">
+    update group_user
+    <set>
+      <if test="guGroupId != null">
+        gu_group_id = #{guGroupId,jdbcType=INTEGER},
+      </if>
+      <if test="guSlaughterId != null">
+        gu_slaughter_id = #{guSlaughterId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where gu_id = #{guId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.GroupUser">
+    update group_user
+    set gu_group_id = #{guGroupId,jdbcType=INTEGER},
+      gu_slaughter_id = #{guSlaughterId,jdbcType=VARCHAR}
+    where gu_id = #{guId,jdbcType=INTEGER}
+  </update>
+</mapper>

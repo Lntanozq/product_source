@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ManagerVaccinesExtendMapper">
+    <update id="deleteAllByIds" parameterType="List">
+        update manager_vaccines
+        set v_delete = 1
+        where v_vaccines_id in
+        <foreach collection="vIds" item="vId" open="(" separator="," close=")">
+            #{vId}
+        </foreach>
+    </update>
+
+    <select id="queryAll" resultMap="com.briup.framework.mapper.ManagerVaccinesMapper.BaseResultMap">
+        select * from manager_vaccines where v_delete=0
+    </select>
+
+    <select id="query" resultMap="com.briup.framework.mapper.ManagerVaccinesMapper.BaseResultMap">
+        select *
+        from manager_vaccines
+        <where>
+            <!-- v_delete=0 -->
+            <if test="vId != null">
+                and v_vaccines_id = #{vId}
+            </if>
+            <if test="vName != null">
+                and v_name like concat('%',#{vName},'%')
+            </if>
+            <if test="vSupplier != null">
+                and v_supplier like concat('%',#{vSupplier},'%')
+            </if>
+            <if test="vType != null">
+                and v_type like concat('%',#{vType},'%')
+            </if>
+        </where>
+        order by STR_TO_DATE(v_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+
+    <select id="selectById" parameterType="String" resultMap="com.briup.framework.mapper.ManagerVaccinesMapper.BaseResultMap">
+        select *
+        from manager_vaccines
+        where v_delete = 0
+            and v_vaccines_id = #{vId}
+    </select>
+
+</mapper>

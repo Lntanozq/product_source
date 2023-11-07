@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.ShiftCircleMapper">
+  <resultMap id="BaseResultMap" type="com.briup.framework.bean.ShiftCircle">
+    <id column="sc_id" jdbcType="INTEGER" property="scId" />
+    <result column="sc_animal_id" jdbcType="VARCHAR" property="scAnimalId" />
+    <result column="sc_original_hurdles_id" jdbcType="VARCHAR" property="scOriginalHurdlesId" />
+    <result column="sc_new_hurdles_id" jdbcType="VARCHAR" property="scNewHurdlesId" />
+    <result column="sc_time" jdbcType="VARCHAR" property="scTime" />
+    <result column="sc_ubreed_id" jdbcType="VARCHAR" property="scUbreedId" />
+    <result column="sc_reason" jdbcType="VARCHAR" property="scReason" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sc_id, sc_animal_id, sc_original_hurdles_id, sc_new_hurdles_id, sc_time, sc_ubreed_id, 
+    sc_reason
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from shift_circle
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from shift_circle
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.briup.framework.bean.ShiftCircle">
+    insert into shift_circle (sc_id, sc_animal_id, sc_original_hurdles_id, 
+      sc_new_hurdles_id, sc_time, sc_ubreed_id, 
+      sc_reason)
+    values (#{scId,jdbcType=INTEGER}, #{scAnimalId,jdbcType=VARCHAR}, #{scOriginalHurdlesId,jdbcType=VARCHAR}, 
+      #{scNewHurdlesId,jdbcType=VARCHAR}, #{scTime,jdbcType=VARCHAR}, #{scUbreedId,jdbcType=VARCHAR}, 
+      #{scReason,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.briup.framework.bean.ShiftCircle">
+    insert into shift_circle
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="scId != null">
+        sc_id,
+      </if>
+      <if test="scAnimalId != null">
+        sc_animal_id,
+      </if>
+      <if test="scOriginalHurdlesId != null">
+        sc_original_hurdles_id,
+      </if>
+      <if test="scNewHurdlesId != null">
+        sc_new_hurdles_id,
+      </if>
+      <if test="scTime != null">
+        sc_time,
+      </if>
+      <if test="scUbreedId != null">
+        sc_ubreed_id,
+      </if>
+      <if test="scReason != null">
+        sc_reason,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="scId != null">
+        #{scId,jdbcType=INTEGER},
+      </if>
+      <if test="scAnimalId != null">
+        #{scAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="scOriginalHurdlesId != null">
+        #{scOriginalHurdlesId,jdbcType=VARCHAR},
+      </if>
+      <if test="scNewHurdlesId != null">
+        #{scNewHurdlesId,jdbcType=VARCHAR},
+      </if>
+      <if test="scTime != null">
+        #{scTime,jdbcType=VARCHAR},
+      </if>
+      <if test="scUbreedId != null">
+        #{scUbreedId,jdbcType=VARCHAR},
+      </if>
+      <if test="scReason != null">
+        #{scReason,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.briup.framework.bean.ShiftCircle">
+    update shift_circle
+    <set>
+      <if test="scAnimalId != null">
+        sc_animal_id = #{scAnimalId,jdbcType=VARCHAR},
+      </if>
+      <if test="scOriginalHurdlesId != null">
+        sc_original_hurdles_id = #{scOriginalHurdlesId,jdbcType=VARCHAR},
+      </if>
+      <if test="scNewHurdlesId != null">
+        sc_new_hurdles_id = #{scNewHurdlesId,jdbcType=VARCHAR},
+      </if>
+      <if test="scTime != null">
+        sc_time = #{scTime,jdbcType=VARCHAR},
+      </if>
+      <if test="scUbreedId != null">
+        sc_ubreed_id = #{scUbreedId,jdbcType=VARCHAR},
+      </if>
+      <if test="scReason != null">
+        sc_reason = #{scReason,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.briup.framework.bean.ShiftCircle">
+    update shift_circle
+    set sc_animal_id = #{scAnimalId,jdbcType=VARCHAR},
+      sc_original_hurdles_id = #{scOriginalHurdlesId,jdbcType=VARCHAR},
+      sc_new_hurdles_id = #{scNewHurdlesId,jdbcType=VARCHAR},
+      sc_time = #{scTime,jdbcType=VARCHAR},
+      sc_ubreed_id = #{scUbreedId,jdbcType=VARCHAR},
+      sc_reason = #{scReason,jdbcType=VARCHAR}
+    where sc_id = #{scId,jdbcType=INTEGER}
+  </update>
+</mapper>

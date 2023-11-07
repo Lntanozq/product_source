@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ManagerAnimalExtendMapper">
+    <resultMap id="ManagerAnimalExtendMap" type="com.briup.framework.bean.extend.ManagerAnimalExtend" extends="com.briup.framework.mapper.ManagerAnimalMapper.BaseResultMap">
+        <association property="managerBatch" resultMap="com.briup.framework.mapper.ManagerBatchMapper.BaseResultMap"/>
+        <association property="managerHurdles" resultMap="com.briup.framework.mapper.extend.ManagerHurdlesExtendMapper.ManagerHurdlesExtendMap"/>
+    </resultMap>
+    <select id="query"  resultMap="ManagerAnimalExtendMap">
+        select  a.a_animal_id, a.a_weight, a.a_gender, a.a_healthy,
+               a.a_status, a.a_inoculate, a.a_time, a.a_backup1,
+        a.a_backup2, a.a_backup3, a.a_batch_id, a.a_hurdles_id
+               ,h.h_id, h.h_name, h.h_desc, h.h_max, h.h_saved, h.h_time,
+        h.h_enable, h.h_full, h.h_backup1, h.h_backup2,
+        h.h_backup3, h.h_delete, h.h_fence_id,
+        fh.fh_id, fh.fh_name, fh.fh_desc, fh.fh_time, fh.fh_delete,
+               b.b_serial_id, b.b_desc, b.b_quarantine, b.b_qualified, b.b_quarantine_img, b.b_time, b.b_delete
+         from manager_animal a, manager_hurdles h,manager_batch b,manager_fence_house fh
+        <where>
+            a.a_batch_id=b.b_serial_id and a.a_hurdles_id=h.h_id and a.a_backup2='0' and h.h_fence_id=fh.fh_id
+            <if test="batchNumber != null">
+                AND a.a_batch_id =#{batchNumber}
+            </if>
+            <if test="hurdlesNumber != null">
+                AND a.a_hurdles_id =#{hurdlesNumber}
+            </if>
+            <if test="aHealthy != null">
+                AND a.a_healthy=#{aHealthy}
+            </if>
+            <if test="aGender != null">
+                AND a.a_gender=#{aGender}
+            </if>
+        </where>
+        order by STR_TO_DATE(a.a_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+    <update id="updateById" parameterType="String">
+        update manager_animal set  a_backup2='1' where a_animal_id=#{aId}
+    </update>
+    <update id="updateStatus">
+        update manager_animal
+        set a_status = #{status}
+        where a_batch_id = #{batchId}
+        and a_healthy = '健康'
+        and a_backup2='0'
+    </update>
+    <update id="updateHurdlesId">
+        update manager_animal
+        set a_hurdles_id = #{hurdlesId}
+        where a_animal_id = #{animalId}
+        and a_backup2='0'
+    </update>
+    <select id="selectById" parameterType="String" resultMap="com.briup.framework.mapper.ManagerAnimalMapper.BaseResultMap">
+        select  a_animal_id, a_weight, a_gender, a_healthy, a_status, a_inoculate, a_time, a_backup1, a_backup2, a_backup3, a_batch_id, a_hurdles_id
+        from manager_animal
+        where  a_animal_id = #{aId} and a_backup2='0'
+    </select>
+    <select id="findByAnimalId" parameterType="String"  resultMap="ManagerAnimalExtendMap">
+        select  a.a_animal_id, a.a_weight, a.a_gender, a.a_healthy, a.a_status, a.a_inoculate, a.a_time, a.a_backup1,
+        a.a_backup2, a.a_backup3, a.a_batch_id, a.a_hurdles_id
+        ,h.h_id, h.h_name, h.h_desc, h.h_max, h.h_saved, h.h_time,
+        h.h_enable, h.h_full, h.h_backup1, h.h_backup2,
+        h.h_backup3, h.h_delete, h.h_fence_id,
+        fh.fh_id, fh.fh_name, fh.fh_desc, fh.fh_time, fh.fh_delete,
+        b.b_serial_id, b.b_desc, b.b_quarantine, b.b_qualified, b.b_quarantine_img, b.b_time, b.b_delete
+        from manager_animal a, manager_hurdles h,manager_batch b,manager_fence_house fh
+        where
+            a.a_batch_id=b.b_serial_id and a.a_hurdles_id=h.h_id and a.a_backup2='0' and h.h_fence_id=fh.fh_id
+           and  a.a_animal_id=#{animalId}
+    </select>
+    <select id="selectByWeightCount1" resultType="int">
+        select count(*) from manager_animal where a_weight&lt;30 and a_backup2='0'
+    </select>
+    <select id="selectByWeightCount2" resultType="int">
+        select count(*) from manager_animal where a_weight&gt;=30 and a_weight&lt;=50 and a_backup2='0'
+    </select>
+    <select id="selectByWeightCount3" resultType="int">
+        select count(*) from manager_animal where a_weight&gt;50 and a_backup2='0'
+    </select>
+</mapper>

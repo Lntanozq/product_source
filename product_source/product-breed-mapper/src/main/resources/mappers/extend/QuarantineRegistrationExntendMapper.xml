@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.QuarantineRegistrationExtendMapper">
+    <resultMap id="QuarantineRegistrationExtendMap" type="com.briup.framework.bean.extend.QuarantineRegistrationExtend" extends="com.briup.framework.mapper.QuarantineRegistrationMapper.BaseResultMap">
+        <result property="bQualified" column="bQualified"></result>
+        <association property="account" resultMap="com.briup.framework.base.mapper.ext.BaseAccountExtMapper.baseResult"></association>
+        <association property="managerBatchExtend" resultMap="com.briup.framework.mapper.extend.ManagerBatchExtendMapper.ManagerBatchExtendMap"></association>
+    </resultMap>
+
+    <delete id="deleteInBatch" parameterType="List">
+        delete from quarantine_registration
+        where gr_id in
+        <foreach collection="ids" open="("  separator="," close=")" item="id">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteById" parameterType="int">
+        delete from quarantine_registration
+        where gr_id = #{id}
+    </delete>
+
+    <select id="queryAll" resultMap="com.briup.framework.mapper.QuarantineRegistrationMapper.BaseResultMap">
+        select  gr_id, gr_time, gr_img, gr_mechanism, gr_batch_id, gr_uquarantiner_id
+        from  quarantine_registration
+        order by STR_TO_DATE(gr_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+
+    <select id="query" resultMap="QuarantineRegistrationExtendMap">
+        select ac.account_id, username, password, avatar, email, mobile, status, br.role_id,br.role_name,br.remark,b.b_qualified bQualified,q.*,b.*
+        from   quarantine_registration q
+        left join base_account ac on q.gr_uquarantiner_id = ac.account_id
+        left join base_account_role_r r on ac.account_id = r.account_id
+        left join base_role br on r.role_id = br.role_id
+        left join (select a.num,a.astatus,b.b_serial_id, b.b_desc, b.b_quarantine, b.b_qualified, b.b_quarantine_img, b.b_time, b.b_delete
+                    from manager_batch b left join ( select count(a_animal_id) num,a_batch_id,GROUP_CONCAT(DISTINCT a_status) astatus
+                                                    from manager_animal
+                                                    group by a_batch_id) a
+                                                    on b.b_serial_id=a.a_batch_id
+                                                    where b.b_delete=0
+                    ) b on q.gr_batch_id = b.b_serial_id
+        <where>
+            and b.b_delete=0
+            <if test="grBatchId != null">
+                and q.gr_batch_id like concat('%',#{grBatchId},'%')
+            </if>
+            <if test="grMechanism != null">
+                and q.gr_mechanism like concat('%',#{grMechanism},'%')
+            </if>
+            <if test="bQualified != null">
+                and b.b_qualified = #{bQualified}
+            </if>
+            <if test="grUquarantinerId != null">
+                and q.gr_uquarantiner_id = #{grUquarantinerId}
+            </if>
+            <if test="start != null">
+                and STR_TO_DATE(q.gr_time,'%Y-%m-%d %H:%i:%s') >= #{start}
+            </if>
+            <if test="end != null">
+                and STR_TO_DATE(q.gr_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{end}
+            </if>
+        </where>
+        order by STR_TO_DATE(q.gr_time,'%Y-%m-%d %H:%i:%s') desc
+    </select>
+    <select id="queryAllUser" resultMap="com.briup.framework.base.mapper.ext.BaseAccountExtMapper.baseResult">
+       select ac.account_id, username, password, avatar, email, mobile, status, br.role_id,br.role_name,br.remark
+       from base_account ac
+       left join base_account_role_r r on ac.account_id = r.account_id
+       left join base_role br on r.role_id = br.role_id
+       where ac.account_id in (select distinct gr_uquarantiner_id
+                                from quarantine_registration)
+    </select>
+</mapper>

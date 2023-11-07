@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+    PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+    "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+    <properties resource="mybaits-generator-db.properties"></properties>
+
+    <context id="MyBatis3" targetRuntime="MyBatis3" defaultModelType="flat">
+        <!-- 防止xml追加 -->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"></plugin>
+
+        <!-- 取消所有注释 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+            <property name="suppressDate" value="true" />
+        </commentGenerator>
+
+        <jdbcConnection driverClass="${driverClass}" connectionURL="${connectionURL}" userId="${userId}" password="${password}" />
+
+        <!-- 指定生成的类型为java类型，避免数据库中number等类型字段 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!-- 对应的实体类 -->
+        <javaModelGenerator targetPackage="com.briup.framework.bean" targetProject="../product-breed-mapper/src/main/java">
+        </javaModelGenerator>
+
+        <!--对应的XXXMapper.xml文件 -->
+        <sqlMapGenerator targetPackage="mappers" targetProject="../product-breed-mapper/src/main/resources">
+        </sqlMapGenerator>
+
+        <!-- 对应的XXXMapper.java文件 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.briup.framework.mapper" targetProject="../product-breed-mapper/src/main/java">
+        </javaClientGenerator>
+
+        <!--
+            <table tableName="briup_%" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false">
+                <domainObjectRenamingRule searchString="^Briup" replaceString=""/>
+            </table>
+        -->
+        <table tableName="manager_fence_house" domainObjectName="ManagerFenceHouse" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_hurdles" domainObjectName="ManagerHurdles" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_batch" domainObjectName="ManagerBatch" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_animal" domainObjectName="ManagerAnimal" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_feed" domainObjectName="ManagerFeed" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_vaccines" domainObjectName="ManagerVaccines" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_disease" domainObjectName="ManagerDisease" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_slaughtering_group" domainObjectName="ManagerSlaughteringGroup" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="group_user" domainObjectName="GroupUser" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_freezer" domainObjectName="ManagerFreezer" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="manager_customer" domainObjectName="ManagerCustomer" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="index_record" domainObjectName="IndexRecord" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="shift_circle" domainObjectName="ShiftCircle" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="inoculation_record" domainObjectName="InoculationRecord" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="feed_record" domainObjectName="FeedRecord" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="situation_reporting" domainObjectName="SituationReporting" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="disease_record" domainObjectName="DiseaseRecord" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="quarantine_registration" domainObjectName="QuarantineRegistration" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="out_circle" domainObjectName="OutCircle" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="slaughter_registration" domainObjectName="SlaughterRegistration" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="cold_storage_record" domainObjectName="ColdStorageRecord" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+        <table tableName="issue_record" domainObjectName="IssueRecord" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"></table>
+    </context>
+</generatorConfiguration>

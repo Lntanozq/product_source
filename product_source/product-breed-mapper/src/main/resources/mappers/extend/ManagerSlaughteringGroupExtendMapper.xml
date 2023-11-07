@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.framework.mapper.extend.ManagerSlaughteringGroupExtendMapper">
+
+    <!-- 定义resultMap: 基本信息 + 员工信息 -->
+    <resultMap id="ManagerSGroupExtendResult"
+               type="com.briup.framework.bean.extend.ManagerSlaughteringGroupExtend"
+               extends="com.briup.framework.mapper.ManagerSlaughteringGroupMapper.BaseResultMap">
+        <collection property="accounts" resultMap="com.briup.framework.base.mapper.basic.BaseAccountMapper.BaseResultMap"></collection>
+    </resultMap>
+
+    <!-- 定义resultMap: 基本信息 + 员工信息 -->
+    <resultMap id="ManagerSGroupExtendResult_Select"
+               type="com.briup.framework.bean.extend.ManagerSlaughteringGroupExtend"
+               extends="com.briup.framework.mapper.ManagerSlaughteringGroupMapper.BaseResultMap">
+        <collection property="accounts" column="sg_id" select="queryAllBaseAccountsBySgId"></collection>
+    </resultMap>
+
+    <update id="deleteAllByIds" parameterType="List">
+        update manager_slaughtering_group
+        set sg_delete=1
+        where sg_id in
+        <foreach collection="sgIds" open="("  separator="," close=")" item="sgId">
+            #{sgId}
+        </foreach>
+    </update>
+
+    <select id="selectAllSGroupWithAccounts" resultMap="ManagerSGroupExtendResult">
+        select msg.*,ba.*
+        from manager_slaughtering_group msg LEFT OUTER JOIN group_user gu
+        on msg.sg_id=gu.gu_group_id , base_account ba
+        where msg.sg_delete=0
+          and gu.gu_slaughter_id=ba.account_id
+        order by msg.sg_id
+    </select>
+
+    <!-- 嵌套结果映射，分页会有问题
+    <select id="query2" resultMap="ManagerSGroupExtendResult">
+        select msg.*,ba.*
+        from manager_slaughtering_group msg LEFT OUTER JOIN group_user gu
+        on msg.sg_id=gu.gu_group_id
+        left outer join base_account ba
+        on gu.gu_slaughter_id=ba.account_id
+        <where>
+            msg.sg_delete=0
+            <if test="sgName != null">
+                and msg.sg_name like concat('%',#{sgName},'%')
+            </if>
+            <if test="sgNum != null">
+                and msg.sg_num = #{sgNum}
+            </if>
+        </where>
+        order by msg.sg_id
+    </select> -->
+
+    <select id="query" resultMap="ManagerSGroupExtendResult_Select">
+        select *
+        from manager_slaughtering_group
+        <where>
+            <!-- sg_delete=0 -->
+            <if test="sgName != null">
+                and sg_name like concat('%',#{sgName},'%')
+            </if>
+            <if test="sgNum != null">
+                and sg_num = #{sgNum}
+            </if>
+        </where>
+        order by sg_id
+    </select>
+
+    <!-- 根据屠宰组编号，找到组中所有成员 -->
+    <select id="queryAllBaseAccountsBySgId" parameterType="string" resultMap="com.briup.framework.base.mapper.basic.BaseAccountMapper.BaseResultMap">
+        select DISTINCT ba.*
+        from group_user gu,base_account ba
+        where gu.gu_slaughter_id=ba.account_id
+            and gu.gu_group_id = #{param0}
+    </select>
+
+    <select id="selectSGroupWithAccountsById" resultMap="ManagerSGroupExtendResult">
+        select msg.*,ba.*
+        from manager_slaughtering_group msg LEFT OUTER JOIN group_user gu
+                                                            on msg.sg_id=gu.gu_group_id
+                                            LEFT OUTER JOIN base_account ba
+                                                            on gu.gu_slaughter_id=ba.account_id
+        where msg.sg_id = #{sgId}
+            <!-- and msg.sg_delete=0 -->
+    </select>
+
+</mapper>
